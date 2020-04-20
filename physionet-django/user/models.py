@@ -647,6 +647,9 @@ class CredentialApplication(models.Model):
         (3, 'Withdrawn')
     )
 
+    # Maximum size for training_completion_report
+    MAX_REPORT_SIZE = 2 * 1024 * 1024
+
     # Location for storing files associated with the application
     FILE_ROOT = os.path.join(settings.MEDIA_ROOT, 'credential-applications')
 
