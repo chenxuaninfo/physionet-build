@@ -21,6 +21,7 @@
           <th>Editor Accepted to Copyedit Complete</th>
           <th>Copyedit Complete to Author Approval</th>
           <th>Author Approval to Published</th>
+          <th>Submission to Published</th>
         </tr>
         {% for stat,info in end_dict.items %}
           <tr>         
@@ -32,6 +33,7 @@
             <td>{{ info.time_ed_copy }}</td>
             <td>{{ info.time_copy_auth }}</td>
             <td>{{ info.time_auth_pub }}</td>
+            <td>{{ info.time_sub_pub }}</td>
           </tr>
         {% endfor %}
       </table>

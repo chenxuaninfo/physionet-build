@@ -1395,7 +1395,8 @@ def editorial_stats(request):
         'time_res_ed',
         'time_ed_copy',
         'time_copy_auth',
-        'time_auth_pub'
+        'time_auth_pub',
+        'time_sub_pub'
     ] 
 
     for project in approved_projects:
@@ -1443,6 +1444,12 @@ def editorial_stats(request):
                 project.author_approval_datetime).days)
         except:
             end_dict[project.title]['time_auth_pub'] = 0
+        try:
+            end_dict[project.title]['time_sub_pub'] = \
+                abs((project.publish_datetime - \
+                project.submission_datetime).days)
+        except:
+            end_dict[project.title]['time_sub_pub'] = 0
 
     temp_dict = {
         'Mean': {},
