@@ -1391,35 +1391,35 @@ def editorial_stats(request):
 
         elapsed_times[project.title] = {}
 
-        if project.editor_assignment_datetime is not None:
+        if project.editor_assignment_datetime:
             elapsed_times[project.title]['time_sub_ed'] = \
                 abs((project.editor_assignment_datetime - \
                 project.submission_datetime).days)
         else:
             elapsed_times[project.title]['time_sub_ed'] = 0
 
-        if project.revision_request_datetime and project.editor_assignment_datetime is not None:
+        if project.revision_request_datetime and project.editor_assignment_datetime:
             elapsed_times[project.title]['time_ed_rev'] = \
                 abs((project.revision_request_datetime - \
                 project.editor_assignment_datetime).days)
         else:
             elapsed_times[project.title]['time_ed_rev'] = 0
 
-        if project.resubmission_datetime and project.revision_request_datetime is not None:
+        if project.resubmission_datetime and project.revision_request_datetime:
             elapsed_times[project.title]['time_rev_res'] = \
                 abs((project.resubmission_datetime - \
                 project.revision_request_datetime).days)
         else:
             elapsed_times[project.title]['time_rev_res'] = 0
 
-        if project.editor_assignment_datetime and project.resubmission_datetime is not None:
+        if project.editor_assignment_datetime and project.resubmission_datetime:
             elapsed_times[project.title]['time_res_ed'] = \
                 abs((project.editor_accept_datetime - \
                 project.resubmission_datetime).days)
         else:
             elapsed_times[project.title]['time_res_ed'] = 0
 
-        if project.editor_accept_datetime is not None:
+        if project.editor_accept_datetime:
             elapsed_times[project.title]['time_ed_copy'] = \
                 abs((project.copyedit_completion_datetime - \
                 project.editor_accept_datetime).days)
