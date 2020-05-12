@@ -1383,10 +1383,60 @@ def editorial_stats(request):
     approved_projects = PublishedProject.objects.all().order_by('-publish_datetime').reverse()
     rejected_projects = ArchivedProject.objects.filter(archive_reason=3).order_by('archive_datetime').reverse()
 
-    acceptance_rate = 100.0*len(approved_projects)/(len(approved_projects)+len(rejected_projects))
+    acceptance_rate = round(100.0*len(approved_projects)/(len(approved_projects)+len(rejected_projects)),2)
 
-    # Elapsed times
-    end_dict = {}
+    elapsed_times = {}
+
+    for project in approved_projects:
+
+        elapsed_times[project.title] = {}
+
+        if project.editor_assignment_datetime is not None:
+            elapsed_times[project.title]['time_sub_ed'] = \
+                abs((project.editor_assignment_datetime - \
+                project.submission_datetime).days)
+        else:
+            elapsed_times[project.title]['time_sub_ed'] = 0
+
+        if project.revision_request_datetime and project.editor_assignment_datetime is not None:
+            elapsed_times[project.title]['time_ed_rev'] = \
+                abs((project.revision_request_datetime - \
+                project.editor_assignment_datetime).days)
+        else:
+            elapsed_times[project.title]['time_ed_rev'] = 0
+
+        if project.resubmission_datetime and project.revision_request_datetime is not None:
+            elapsed_times[project.title]['time_rev_res'] = \
+                abs((project.resubmission_datetime - \
+                project.revision_request_datetime).days)
+        else:
+            elapsed_times[project.title]['time_rev_res'] = 0
+
+        if project.editor_assignment_datetime and project.resubmission_datetime is not None:
+            elapsed_times[project.title]['time_res_ed'] = \
+                abs((project.editor_accept_datetime - \
+                project.resubmission_datetime).days)
+        else:
+            elapsed_times[project.title]['time_res_ed'] = 0
+
+        if project.editor_accept_datetime is not None:
+            elapsed_times[project.title]['time_ed_copy'] = \
+                abs((project.copyedit_completion_datetime - \
+                project.editor_accept_datetime).days)
+        else:
+            elapsed_times[project.title]['time_ed_copy'] = 0
+
+        elapsed_times[project.title]['time_copy_auth'] = \
+            abs((project.author_approval_datetime - \
+            project.copyedit_completion_datetime).days)
+
+        elapsed_times[project.title]['time_auth_pub'] = \
+            abs((project.publish_datetime - \
+            project.author_approval_datetime).days)
+
+        elapsed_times[project.title]['time_sub_pub'] = \
+            abs((project.publish_datetime - \
+            project.submission_datetime).days)
 
     prop_list = [
         'time_sub_ed', 
@@ -1399,71 +1449,18 @@ def editorial_stats(request):
         'time_sub_pub'
     ] 
 
-    for project in approved_projects:
-        # Elapsed times
-        end_dict[project.title] = {}
-        try:
-            end_dict[project.title]['time_sub_ed'] = \
-                abs((project.editor_assignment_datetime - \
-                project.submission_datetime).days)
-        except:
-            end_dict[project.title]['time_sub_ed'] = 0
-        try:
-            end_dict[project.title]['time_ed_rev'] = \
-                abs((project.revision_request_datetime - \
-                project.editor_assignment_datetime).days)   
-        except:
-            end_dict[project.title]['time_ed_rev'] = 0
-        try:
-            end_dict[project.title]['time_rev_res'] = \
-                abs((project.resubmission_datetime - \
-                project.revision_request_datetime).days)  
-        except:
-            end_dict[project.title]['time_rev_res'] = 0
-        try:
-            end_dict[project.title]['time_res_ed'] = \
-                abs((project.editor_accept_datetime - \
-                project.resubmission_datetime).days)
-        except:
-            end_dict[project.title]['time_res_ed'] = 0
-        try:
-            end_dict[project.title]['time_ed_copy'] = \
-                abs((project.copyedit_completion_datetime - \
-                project.editor_accept_datetime).days)
-        except:
-            end_dict[project.title]['time_ed_copy'] = 0
-        try:
-            end_dict[project.title]['time_copy_auth'] = \
-                abs((project.author_approval_datetime - \
-                project.copyedit_completion_datetime).days)
-        except:
-            end_dict[project.title]['time_copy_auth'] = 0
-        try:
-            end_dict[project.title]['time_auth_pub'] = \
-                abs((project.publish_datetime - \
-                project.author_approval_datetime).days)
-        except:
-            end_dict[project.title]['time_auth_pub'] = 0
-        try:
-            end_dict[project.title]['time_sub_pub'] = \
-                abs((project.publish_datetime - \
-                project.submission_datetime).days)
-        except:
-            end_dict[project.title]['time_sub_pub'] = 0
-
-    temp_dict = {
+    average_times = {
         'Mean': {},
         'Median': {}
     }
+
     for prop in prop_list:
-        temp_dict['Mean'][prop] = statistics.mean([j[prop] for i,j in end_dict.items()])
-        temp_dict['Median'][prop] = statistics.median([j[prop] for i,j in end_dict.items()])
+        average_times['Mean'][prop] = statistics.mean([j[prop] for i,j in elapsed_times.items()])
+        average_times['Median'][prop] = statistics.median([j[prop] for i,j in elapsed_times.items()])
 
     return render(request, 'console/editorial.html',
-        {'approved_projects': approved_projects, 
-         'rejected_projects': rejected_projects,
-         'acceptance_rate': acceptance_rate, 
-         'end_dict': temp_dict
+        {'acceptance_rate': acceptance_rate,
+         'elapsed_times': average_times
         })
 
 @login_required

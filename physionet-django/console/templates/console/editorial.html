@@ -23,7 +23,7 @@
           <th>Author Approval to Published</th>
           <th>Submission to Published</th>
         </tr>
-        {% for stat,info in end_dict.items %}
+        {% for stat,info in elapsed_times.items %}
           <tr>         
             <th>{{ stat }}</th>
             <td>{{ info.time_sub_ed }}</td>
