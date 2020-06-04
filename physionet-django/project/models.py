@@ -698,7 +698,7 @@ class Metadata(models.Model):
         """
         return html2text(self.abstract)
 
-    def edit_log_history(self):
+    def edit_log_history(self, reverse=False):
         """
         Get a list of EditLog objects in submission order.
 
@@ -706,8 +706,15 @@ class Metadata(models.Model):
         author (and objects are listed in that order), but also
         includes the details of the editor's response (if any) to that
         particular submission.
+
+        Args:
+            reverse (bool): If reverse=True, order logs in reverse
+                            chronological order.
         """
-        return self.edit_logs.order_by('submission_datetime').all()
+        if reverse:
+            return self.edit_logs.order_by('-submission_datetime').all()
+        else:
+            return self.edit_logs.order_by('submission_datetime').all()
 
     def copyedit_log_history(self):
         """
