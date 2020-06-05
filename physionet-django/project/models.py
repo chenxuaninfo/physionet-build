@@ -840,7 +840,7 @@ class Metadata(models.Model):
 
         return anonymous.url
 
-    def citation_text(self, style):
+    def citation_text(self, style="Vancouver"):
         """
         Citation information in multiple formats (MLA, APA, Chicago,
         Harvard, and Vancouver).
