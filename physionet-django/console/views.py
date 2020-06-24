@@ -3,7 +3,7 @@ import pdb
 import logging
 import os
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta
 from itertools import chain
 import statistics
 
@@ -1385,6 +1385,14 @@ def editorial_stats(request):
 
     acceptance_rate = round(100.0*len(approved_projects)/(len(approved_projects)+len(rejected_projects)),2)
 
+    one_week_ago = datetime.today() - timedelta(days=7)
+    one_week_projects = len(PublishedProject.objects.filter(publish_datetime__gte=one_week_ago))
+    one_month_ago = datetime.today() - timedelta(days=30)
+    one_month_projects = len(PublishedProject.objects.filter(publish_datetime__gte=one_month_ago))
+    one_year_ago = datetime.today() - timedelta(days=365)
+    one_year_projects = len(PublishedProject.objects.filter(publish_datetime__gte=one_year_ago))
+    all_projects = len(approved_projects)
+
     elapsed_times = {}
 
     for project in approved_projects:
@@ -1460,7 +1468,11 @@ def editorial_stats(request):
 
     return render(request, 'console/editorial.html',
         {'acceptance_rate': acceptance_rate,
-         'elapsed_times': average_times
+         'elapsed_times': average_times,
+         'one_week_projects': one_week_projects,
+         'one_month_projects': one_month_projects,
+         'one_year_projects': one_year_projects,
+         'all_projects': all_projects
         })
 
 @login_required

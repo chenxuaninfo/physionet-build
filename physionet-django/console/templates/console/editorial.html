@@ -9,6 +9,21 @@
   <div class="card-body">
     <div class="table-responsive">
 
+      <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <tr>
+          <th>New Publications (past week)</th>
+          <th>New Publications (past month)</th>
+          <th>New Publications (past year)</th>
+          <th>All Publications</th>
+        </tr>
+          <tr>
+            <td>{{ one_week_projects }}</td>
+            <td>{{ one_month_projects }}</td>
+            <td>{{ one_year_projects }}</td>
+            <td>{{ all_projects }}</td>
+          </tr>
+      </table>
+
       <p><strong>Acceptance Rate</strong>: <span>{{ acceptance_rate }}</span>%</p>
 
       <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
