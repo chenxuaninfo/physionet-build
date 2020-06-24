@@ -1463,8 +1463,8 @@ def editorial_stats(request):
     }
 
     for prop in prop_list:
-        average_times['Mean'][prop] = statistics.mean([j[prop] for i,j in elapsed_times.items()])
-        average_times['Median'][prop] = statistics.median([j[prop] for i,j in elapsed_times.items()])
+        average_times['Mean'][prop] = round(statistics.mean([j[prop] for i,j in elapsed_times.items()]),1)
+        average_times['Median'][prop] = round(statistics.median([j[prop] for i,j in elapsed_times.items()]),1)
 
     return render(request, 'console/editorial.html',
         {'acceptance_rate': acceptance_rate,
